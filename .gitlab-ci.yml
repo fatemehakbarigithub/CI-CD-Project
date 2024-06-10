@@ -1,26 +1,12 @@
 stages:
-  - build
-  - test
-  - deploy
+    - test
+    - build
+    - deploy
 
-build:
-  stage: build
-  script:
-    - echo "Building the project..."
-    - docker build -t flask_project .
-
-test:
-  stage: test
-  script:
-    - echo "Running tests..."
-    - docker run --rm flask_project python -m unittest discover -s tests
-  only:
-    - master
-
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying the project..."
-    - docker run -d -p 5000:5000 flask_project
-  only:
-    - master
+run_tests:
+    stage: test
+    image: python:3.10.8-slim-buster
+    before_script:
+        - pip install -r requirements.txt
+    script:
+        - python -m pytest
